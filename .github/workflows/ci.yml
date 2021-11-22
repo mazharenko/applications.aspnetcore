@@ -4,7 +4,7 @@ on: [push, workflow_dispatch]
 
 jobs:
   build:
-    uses: vostok/github.ci@master/workflows/build.yml
+    uses: vostok/github.ci@master/.github/workflows/build.yml
 
   test:
     needs: build
