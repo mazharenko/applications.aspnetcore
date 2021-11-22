@@ -4,33 +4,7 @@ on: [push, workflow_dispatch]
 
 jobs:
   build:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [windows-latest, ubuntu-latest]
-        references: [cement, nuget]
-    runs-on: ${{ matrix.os }}
-
-    steps: 
-      - name: Checkout
-        uses: actions/checkout@main
-        with:
-          path: vostok.module
-          
-      - name: Install .NET Core 2.1
-        uses: actions/setup-dotnet@main
-        with:
-          dotnet-version: '2.1.x'
-
-      - name: Install .NET 6.0
-        uses: actions/setup-dotnet@main
-        with:
-          dotnet-version: '6.0.x'
-        
-      - name: Build
-        uses: vostok/github.ci@master
-        with:
-          references: ${{ matrix.references }}
+    uses: vostok/github.ci@master/workflows/build.yml
 
   test:
     needs: build
