@@ -4,81 +4,14 @@ on: [push, workflow_dispatch]
 
 jobs:
   build:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [windows-latest, ubuntu-latest]
-        references: [cement, nuget]
-    runs-on: ${{ matrix.os }}
-
-    steps: 
-      - name: Checkout
-        uses: actions/checkout@main
-        with:
-          path: vostok.module
-          
-      - name: Install .NET Core 2.1
-        uses: actions/setup-dotnet@main
-        with:
-          dotnet-version: '2.1.x'
-
-      - name: Install .NET 6.0
-        uses: actions/setup-dotnet@main
-        with:
-          dotnet-version: '6.0.x'
-        
-      - name: Build
-        uses: vostok/github.ci@master
-        with:
-          references: ${{ matrix.references }}
+    uses: vostok/github.ci/.github/workflows/build.yml@master
 
   test:
     needs: build
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [windows-latest, ubuntu-latest]
-        references: [cement, nuget]
-        framework: [net48, netcoreapp3.1, net5.0, net6.0]
-        exclude: 
-          - os: ubuntu-latest
-            framework: net48
-    runs-on: ${{ matrix.os }}
-   
-    steps:
-      - name: Install .NET Core 3.1
-        uses: actions/setup-dotnet@main
-        with:
-          dotnet-version: '3.1.x'
-          
-      - name: Install .NET 5.0
-        uses: actions/setup-dotnet@main
-        with:
-          dotnet-version: '5.0.x'
-
-      - name: Install .NET 6.0
-        uses: actions/setup-dotnet@main
-        with:
-          dotnet-version: '6.0.x'
-        
-      - name: Test
-        uses: vostok/github.ci@master
-        with:
-          references: ${{ matrix.references }}
-          framework: ${{ matrix.framework }}
+    uses: vostok/github.ci/.github/workflows/test.yml@master
+    with:
+      frameworks: '["net6.0", "net5.0", "netcoreapp3.1", "net48"]'
            
   publish:
     needs: test
-    runs-on: windows-latest
-    if: ${{ github.repository_owner == 'vostok' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/release/')) }}
-   
-    steps:
-      - name: Install .NET 6.0
-        uses: actions/setup-dotnet@main
-        with:
-          dotnet-version: '6.0.x'
-
-      - name: Publish
-        uses: vostok/github.ci@master
-        with: 
-          key: ${{ secrets.NUGET_TOKEN }}
+    uses: vostok/github.ci/.github/workflows/publish.yml@master
