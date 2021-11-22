@@ -10,7 +10,7 @@ jobs:
     needs: build
     uses: vostok/github.ci/.github/workflows/test.yml@master
     with:
-      frameworks: toJSON([net6.0, net5.0, netcoreapp3.1, net48])
+      frameworks: '["net6.0", "net5.0", "netcoreapp3.1", "net48"]'
            
   publish:
     needs: test
