@@ -9,11 +9,9 @@ jobs:
   test:
     needs: build
     uses: vostok/github.ci/.github/workflows/test.yml@master
-    with:
-      frameworks: '["net6.0", "net5.0", "netcoreapp3.1", "net48"]'
-           
+
   publish:
     needs: test
     uses: vostok/github.ci/.github/workflows/publish.yml@master
     secrets: 
-      token: ${{ secrets.NUGET_TOKEN }}    
+      token: ${{ secrets.NUGET_TOKEN }}
